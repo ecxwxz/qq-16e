@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QQ信息查询 (⚠仅用于检测自己信息泄露)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="text"], input[type="button"] {
+            padding: 10px;
+            margin: 10px 0;
+            width: 95%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="button"] {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        input[type="button"]:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QQ信息查询 ©wxz</h1>
+        <input type="text" id="qq" placeholder="请输入QQ号">
+        <input type="button" value="查询" onclick="queryQQInfo()">
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function queryQQInfo() {
+            var qq = document.getElementById('qq').value;
+            if (!qq) {
+                alert("输入不能为空");
+                return;
+            }
+
+            var url = "https://api.xywlapi.cc/qqapi?qq=" + qq;
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("查询失败");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 200) {
+                        var resultDiv = document.getElementById('result');
+                        resultDiv.innerHTML = `
+                            <p><strong>查询结果：</strong></p>
+                            <p>QQ号：${data.qq || '未知'}</p>
+                            <p>手机号：${data.phone || '未知'}</p>
+                            <p>手机号地区：${data.phonediqu || '未知'}</p>
+                        `;
+                    } else {
+                        alert("查询失败，原因：" + (data.message || '未知'));
+                    }
+                })
+                .catch(error => {
+                    alert("查询失败，原因：" + error.message);
+                });
+        }
+    </script>
+</body>
+</html>
